@@ -21,15 +21,15 @@ long.
 ## Evolutionary distance between sequences
 
 A common operation on a pair of sequences is to calculate their evolutionary
-distance. A simple model called Jukes-Cantor discribes the distance _d~a,b~_
-between two sequences _a_ and _b_ as __d~a,b~= -3/4 ln(1 - 4α/3)__, where α. is
+distance. A simple model called Jukes-Cantor discribes the distance _d(a,b)_
+between two sequences _a_ and _b_ as __d(a,b)= -3/4 ln(1 - 4α/3)__, where α. is
 the percentage of positions where the sequences differ.  
 The formula doesn't work well if the sequences differ too much, so if α>0.74
-then you often let d~a,b~ = 3.3.
+then you often let d(a,b) = 3.3.
 
 There's an almost identical model ("the Poisson model") for protein sequences
-where you set the distance as __d~a,b~ = -19/20 ln(1 - 20α/19)__ where
-α ≤ 0.94, otherwise d~a,b~ = 3.7.
+where you set the distance as __d(a,b) = -19/20 ln(1 - 20α/19)__ where
+α ≤ 0.94, otherwise d(a,b) = 3.7.
 
 # Tasks
 
