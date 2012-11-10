@@ -22,7 +22,7 @@ long.
 
 A common operation on a pair of sequences is to calculate their evolutionary
 distance. A simple model called Jukes-Cantor discribes the distance _d(a,b)_
-between two sequences _a_ and _b_ as __d(a,b)= -3/4 ln(1 - 4α/3)__, where α. is
+between two sequences _a_ and _b_ as __d(a,b)= -3/4 ln(1 - 4α/3)__, where α is
 the percentage of positions where the sequences differ.  
 The formula doesn't work well if the sequences differ too much, so if α>0.74
 then you often let d(a,b) = 3.3.
