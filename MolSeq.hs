@@ -1,11 +1,11 @@
 module MolSeq (string2seq, seqDistance) where
 
-data Molecule = DNA | Protein
 
+data Molecule = DNA | Protein deriving (Show, Eq)
 data MolSeq = MolSeq
-    { name :: String
-    , sequence :: String
-    , molType :: Molecule
+    { molName     :: String
+    , molSequence :: String
+    , molType     :: Molecule
     } deriving (Show)
 
 string2seq :: String -> String -> MolSeq
