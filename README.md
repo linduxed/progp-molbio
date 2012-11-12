@@ -58,7 +58,7 @@ to calculate the element-wise difference. If we let _M=(m(i,j))_ and
 _M'=(m'(i,j))_ be profiles that span over _n_ positions. Their distance can
 then be described as:
 
-__d(M, M') = ∑i=1n ∑j∈{A,C,G,T} |m(i,j)-m'(i,j)|__
+__d(M, M') = \sum i=1n \sum j \in {A,C,G,T} |m(i,j)-m'(i,j)|__
 
 In other words, you sum both positions and different letters in each position.
 
