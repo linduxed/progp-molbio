@@ -30,7 +30,7 @@ seqDistance a b
     | otherwise                                 = calcDistance
     where
         sequenceLength   = length $ molSequence a
-        differentLetters = length $ filter (uncurry (==)) $ (zip `on` molSequence) a b
+        differentLetters = length $ filter (not . uncurry (==)) $ (zip `on` molSequence) a b
         difference       = ((/) `on` fromIntegral) differentLetters sequenceLength
 
         calcDistance
