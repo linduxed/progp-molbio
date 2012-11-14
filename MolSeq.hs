@@ -1,4 +1,4 @@
-module MolSeq (string2seq, seqDistance) where
+module MolSeq where
 
 import Data.Function (on)
 
