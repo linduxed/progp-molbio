@@ -2,11 +2,12 @@ module Profile where
 
 import MolSeq
 
-data ProfileType = DNA | Protein deriving (Show, Eq)
+type ProfileMatrix = [[Double]]
+data ProfileType = DNAProf | ProteinProf deriving (Show, Eq)
 
 data Profile = Profile
-    { profName      :: String
-    , profSequences :: Integer
-    , profType      :: ProfileType
-    , profMatrix    :: [[Double]]
+    { profName     :: String
+    , profSeqCount :: Int
+    , profType     :: ProfileType
+    , profMatrix   :: ProfileMatrix
     } deriving (Show, Eq)
