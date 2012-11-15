@@ -38,3 +38,10 @@ generateRow :: String -> String -> [Double]
 generateRow [] _ = []
 generateRow (letter:letters) seqHeads = letterRatio : generateRow letters seqHeads where
     letterRatio = ((/) `on` fromIntegral) (length $ filter (== letter) seqHeads) (length seqHeads)
+
+profileDistance :: Profile -> Profile -> Double
+profileDistance aProf bProf = sum $ map abs $ zipWith (-) flatMatrixA flatMatrixB where
+    flatMatrixA = flatTransMat aProf
+    flatMatrixB = flatTransMat bProf
+
+    flatTransMat = concat . transpose . profMatrix
