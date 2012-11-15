@@ -71,7 +71,7 @@ In other words, you sum both positions and different letters in each position.
 * Implement ```string2seq :: String -> String -> MolSeq```, where the first
   argument should be a name and the second one a sequence. This function needs
   to be able to differentiate between DNA and proteins.
-* Implement ```seqDistance :: MolSeq -> MolSeq -> Float```, which compares two
+* Implement ```seqDistance :: MolSeq -> MolSeq -> Double```, which compares two
   DNA sequences or two protein sequences and returns their evolutionary
   distance. Comparing DNA with a protein should result in an error.
 
@@ -86,7 +86,7 @@ In other words, you sum both positions and different letters in each position.
 * Implement ```fromMolSeqs :: [MolSeq] -> Profile```. The profile name is
   arbitrary and may, for example, be obtained by using the name of the first
   sequence.
-* Implement ```profileDistance :: Profile -> Profile -> Float```. The distance
+* Implement ```profileDistance :: Profile -> Profile -> Double```. The distance
   between two profiles _M_ and _M'_ should be measured with the the above
   mentioned formula _d(M, M')_.
 

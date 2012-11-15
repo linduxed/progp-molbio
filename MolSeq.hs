@@ -23,7 +23,7 @@ determineMolType inSequence
     | all (`elem` aminoacids)  inSequence = Protein
     | otherwise                           = error "Sequence contains unknown letters."
 
-seqDistance :: MolSeq -> MolSeq -> Float
+seqDistance :: MolSeq -> MolSeq -> Double
 seqDistance a b
     | not $ sameLength  a b                     = error "Sequences are not of same length."
     | not $ sameMolType a b                     = error "Can't compare DNA to a Protein."
