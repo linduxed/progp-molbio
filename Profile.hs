@@ -27,23 +27,14 @@ allSequencesType seqList
     | otherwise                            = error "Can't create profile for more than one type of sequence."
 
 generateMatrix :: [MolSeq] -> ProfileMatrix
-generateMatrix sequences = genLoop onlyStrings where
+generateMatrix sequences = transpose $ map (generateRow seqLetters) (transpose onlyStrings) where
     onlyStrings = map molSequence sequences
     seqType     = molType $ head sequences
-
-    genLoop seqStrings = zipWith (++) headColumn tailColumns where
-        seqHeads = map head seqStrings
-        seqTails = map tail seqStrings
-
-        headColumn
-            | seqType == DNA = transpose [generateRow seqHeads nucleotides]
-            | otherwise      = transpose [generateRow seqHeads aminoacids]
-
-        tailColumns
-            | all null seqTails = repeat []
-            | otherwise         = genLoop seqTails
+    seqLetters
+        | seqType == DNA = nucleotides
+        | otherwise      = aminoacids
 
 generateRow :: String -> String -> [Double]
-generateRow _ [] = []
-generateRow headsToCompare (letter:letters) = letterRatio : generateRow headsToCompare letters where
-    letterRatio = ((/) `on` fromIntegral) (length $ filter (== letter) headsToCompare) (length headsToCompare)
+generateRow [] _ = []
+generateRow (letter:letters) seqHeads = letterRatio : generateRow letters seqHeads where
+    letterRatio = ((/) `on` fromIntegral) (length $ filter (== letter) seqHeads) (length seqHeads)
