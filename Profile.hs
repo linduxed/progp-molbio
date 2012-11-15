@@ -26,6 +26,9 @@ allSequencesType seqList
     | all ((== Protein) . molType) seqList = ProteinProf
     | otherwise                            = error "Can't create profile for more than one type of sequence."
 
+{-
+ - Matrices are transposed so that columns are more easily compared.
+ -}
 generateMatrix :: [MolSeq] -> ProfileMatrix
 generateMatrix sequences = transpose $ map (generateRow seqLetters) (transpose onlyStrings) where
     onlyStrings = map molSequence sequences
@@ -39,6 +42,12 @@ generateRow [] _ = []
 generateRow (letter:letters) seqHeads = letterRatio : generateRow letters seqHeads where
     letterRatio = ((/) `on` fromIntegral) (length $ filter (== letter) seqHeads) (length seqHeads)
 
+{-
+ - Matrices are transposed so that columns are more easily compared.
+ - The matrices are flattened with concat for easier processing with zipWith.
+ - Since the provided matrices need to be of identical structure and sizes, the
+ - values will be properly aligned for zipping.
+ -}
 profileDistance :: Profile -> Profile -> Double
 profileDistance aProf bProf = sum $ map abs $ zipWith (-) flatMatrixA flatMatrixB where
     flatMatrixA = flatTransMat aProf
