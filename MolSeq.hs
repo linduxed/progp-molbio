@@ -2,6 +2,11 @@ module MolSeq where
 
 import Data.Function (on)
 
+nucleotides :: String
+aminoacids  :: String
+nucleotides = "ACGT"
+aminoacids  = "ARNDCEQGHILKMFPSTWYV"
+
 data Molecule = DNA | Protein deriving (Show, Eq)
 data MolSeq = MolSeq
     { molName     :: String
@@ -17,9 +22,6 @@ determineMolType inSequence
     | all (`elem` nucleotides) inSequence = DNA
     | all (`elem` aminoacids)  inSequence = Protein
     | otherwise                           = error "Sequence contains unknown letters."
-    where
-        nucleotides = "ACGT"
-        aminoacids  = "ARNDCEQGHILKMFPSTWYV"
 
 seqDistance :: MolSeq -> MolSeq -> Float
 seqDistance a b
