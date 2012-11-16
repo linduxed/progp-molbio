@@ -1,4 +1,4 @@
-module Profile (fromMolSeqs, profileDistance) where
+module Profile (Profile (..), fromMolSeqs, profileDistance) where
 
 import MolSeq
 import Data.List (transpose)

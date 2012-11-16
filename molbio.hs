@@ -1,6 +1,7 @@
 module Molbio where
 import MolSeq
 import Profile
+import Evol
 
 -- The function seqdata converts the datasets in this file to MolSeq if
 -- you have defined string2seq! Just write (for example)
