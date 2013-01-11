@@ -3,26 +3,24 @@ import MolSeq
 import Profile
 import Evol
 
-seqdata = map $ uncurry string2seq
+convertSeqs = map $ uncurry string2seq
 
--- Two simple datasets
-simple = [("S1", "ACGTACGT"), ("S2", "ACCTACCT"), ("S3", "AGGAAGGT"), ("S4", "ACGAAGGA"), ("S5", "AAGGAAGG")]
-sample = [("S1", "ACGTACGT"), ("S2", "CCCTACCT"), ("S3", "AGGAAGGT"), ("S4", "CCGAAGGA"), ("S5", "AAGGAAGG")]
-figur =  [("T1", "ACATAA"), ("T2", "AAGTCA"), ("T3", "ACGTGC"), ("T4", "AAGTTC"), ("T5", "ACGTAA")]
+-- Simple DNA set.
+shortDNAs =  [("T1", "ACATAA"), ("T2", "AAGTCA"), ("T3", "ACGTGC"), ("T4", "AAGTTC"), ("T5", "ACGTAA")]
 
 snabbtest de xs = de s1 s2 where
     s1 = head xs
     s2 = xs !! 1
 
 -- Snabbtest vid redovisningar
-t1 = seqdata figur
-t2 = snabbtest seqDistance $ seqdata figur
-t3 = snabbtest seqDistance $ seqdata foxp4
-t4 = fromMolSeqs $ seqdata foxp4
-t5 = profileDistance (fromMolSeqs $ seqdata fam1) (fromMolSeqs $ seqdata fam2) -- Should equal 171.1
-t6 = profileDistance (fromMolSeqs $ seqdata fam1) (fromMolSeqs $ seqdata fam3) -- Should equal 176.8
-t7 = snabbtest distance $ seqdata foxp4 -- Should equal 0.090
-t8 = distanceMatrix $ seqdata foxp4
+t1 = convertSeqs shortDNAs
+t2 = snabbtest seqDistance $ convertSeqs shortDNAs
+t3 = snabbtest seqDistance $ convertSeqs foxp4
+t4 = fromMolSeqs $ convertSeqs foxp4
+t5 = profileDistance (fromMolSeqs $ convertSeqs fam1) (fromMolSeqs $ convertSeqs fam2) -- Should equal 171.1
+t6 = profileDistance (fromMolSeqs $ convertSeqs fam1) (fromMolSeqs $ convertSeqs fam3) -- Should equal 176.8
+t7 = snabbtest distance $ convertSeqs foxp4 -- Should equal 0.090
+t8 = distanceMatrix $ convertSeqs foxp4
 
 -- Six FOXP4 proteins
 foxp4 = [("FOXP4_HUMAN" , "EMSPAELLHFQQQQALQVARQFLLQQASGLSSPGNNDSKQSAVQVPVSVAMMSPQMLTPQQMQQILSPPQLQALLQQQQALMLQQLQEYYKKQQEQLHLQLLTQQQAGKPQPKEALGNKQLAFQQQLLQMQQLQQQHLLNLQRQGLVSLQPNQASGPLQTLPQAVCPTDLPQLWKGEGAPAEDSVKQEGLDLTGTAATSFAAPKVSPPLSHHTLPNGQPTRRDSSSHEETSPLYGHGECKWPGCETLCEDLGQFIKHLNTEHALDDRSTAQCRVQMQVVQQLEIQLRLQAMMAHLHMRPSEPKPFSQPVTVSADSFPDGLVHPPTSAAAPVTPLRPPGLGSASLHGGGPARRRSSDKFCSPISSELAQNHEFYKNADVRPPFTYASLIRQAILETPDRQLTLNEIYNWFTRMFAYFRRNTATWKNAVRHNLSLHKCFVRVENVKGAVWTVDEREYQKRRPPKMTGSPTLVKNMISGLSYGALNASYQAALAESSFPLLNSPGMLNSASSLLPLSHDDVGAPVEPLPSNGSSPRLSPQYSHQVQVKEEPAEEDRQPGPLGAPNPSASGPPEDRDLEEELPGEEL"),
