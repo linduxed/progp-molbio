@@ -2,25 +2,55 @@ module Molbio where
 import MolSeq
 import Profile
 import Evol
+import Test.HUnit
 
 type RawSeq = (String, String)
+
+roundToDecimals :: Integer -> Double -> Double
+roundToDecimals n = (/factor) . fromInteger . round . (*factor) where
+    factor = 10^n
 
 convertSeqs :: [RawSeq] -> [MolSeq]
 convertSeqs = map $ uncurry string2seq
 
-snabbtest de xs = de s1 s2 where
-    s1 = head xs
-    s2 = xs !! 1
+seqSetsToProfileDistance :: [RawSeq] -> [RawSeq] -> Double
+seqSetsToProfileDistance a b = distance (fromMolSeqs $ convertSeqs a) (fromMolSeqs $ convertSeqs b)
 
--- Snabbtest vid redovisningar
-t1 = convertSeqs shortDNAs
-t2 = snabbtest seqDistance $ convertSeqs shortDNAs
-t3 = snabbtest seqDistance $ convertSeqs foxp4
-t4 = fromMolSeqs $ convertSeqs foxp4
-t5 = profileDistance (fromMolSeqs $ convertSeqs fam1) (fromMolSeqs $ convertSeqs fam2) -- Should equal 171.1
-t6 = profileDistance (fromMolSeqs $ convertSeqs fam1) (fromMolSeqs $ convertSeqs fam3) -- Should equal 176.8
-t7 = snabbtest distance $ convertSeqs foxp4 -- Should equal 0.090
-t8 = distanceMatrix $ convertSeqs foxp4
+seqSetPositionDistance :: [RawSeq] -> Int -> Int -> Double
+seqSetPositionDistance seqList posA posB = distance (convertSeqs seqList !! posA) (convertSeqs seqList !! posB)
+
+testDistancesBetweenFamSets :: Test
+testDistancesBetweenFamSets = TestList
+    [ "Distance between fam1 and fam2." ~: 171.1 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam1 fam2)
+    , "Distance between fam1 and fam3." ~: 176.8 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam1 fam3)
+    , "Distance between fam1 and fam4." ~: 167.2 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam1 fam4)
+    , "Distance between fam1 and fam5." ~: 179.3 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam1 fam5)
+    , "Distance between fam2 and fam3." ~: 151.7 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam2 fam3)
+    , "Distance between fam2 and fam4." ~: 161.3 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam2 fam4)
+    , "Distance between fam2 and fam5." ~: 151.2 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam2 fam5)
+    , "Distance between fam3 and fam4." ~: 160.0 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam3 fam4)
+    , "Distance between fam3 and fam5." ~: 154.1 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam3 fam5)
+    , "Distance between fam4 and fam5." ~: 167.0 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam4 fam5)
+    ]
+
+testDistancesBetweenFOXP4proteins :: Test
+testDistancesBetweenFOXP4proteins = TestList
+    [ "Distance between human and cow."   ~: 0.090 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 0 1)
+    , "Distance between human and dog."   ~: 0.055 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 0 2)
+    , "Distance between human and rat."   ~: 0.051 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 0 3)
+    , "Distance between human and mouse." ~: 0.055 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 0 4)
+    , "Distance between human and frog."  ~: 0.245 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 0 5)
+    , "Distance between cow and dog."     ~: 0.119 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 1 2)
+    , "Distance between cow and rat."     ~: 0.126 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 1 3)
+    , "Distance between cow and mouse."   ~: 0.124 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 1 4)
+    , "Distance between cow and frog."    ~: 0.314 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 1 5)
+    , "Distance between dog and rat."     ~: 0.090 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 2 3)
+    , "Distance between dog and mouse."   ~: 0.090 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 2 4)
+    , "Distance between dog and frog."    ~: 0.272 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 2 5)
+    , "Distance between rat and mouse."   ~: 0.017 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 3 4)
+    , "Distance between rat and frog."    ~: 0.256 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 3 5)
+    , "Distance between mouse and frog."  ~: 0.259 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 4 5)
+    ]
 
 -- Simple DNA set.
 shortDNAs :: [RawSeq]
