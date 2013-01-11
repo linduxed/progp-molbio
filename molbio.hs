@@ -3,18 +3,11 @@ import MolSeq
 import Profile
 import Evol
 
--- The function seqdata converts the datasets in this file to MolSeq if
--- you have defined string2seq! Just write (for example)
---     seqdata foxp4
--- to convert the lists below to a list of sequences.
---
 seqdata = map $ uncurry string2seq
 
 -- Two simple datasets
 simple = [("S1", "ACGTACGT"), ("S2", "ACCTACCT"), ("S3", "AGGAAGGT"), ("S4", "ACGAAGGA"), ("S5", "AAGGAAGG")]
 sample = [("S1", "ACGTACGT"), ("S2", "CCCTACCT"), ("S3", "AGGAAGGT"), ("S4", "CCGAAGGA"), ("S5", "AAGGAAGG")]
-
--- Another simple example from the labnotes:
 figur =  [("T1", "ACATAA"), ("T2", "AAGTCA"), ("T3", "ACGTGC"), ("T4", "AAGTTC"), ("T5", "ACGTAA")]
 
 -- Snabbtest vid redovisningar
@@ -44,7 +37,7 @@ foxp4 = [("FOXP4_HUMAN" , "EMSPAELLHFQQQQALQVARQFLLQQASGLSSPGNNDSKQSAVQVPVSVAMMS
 -- The data has been simplified, but this is essentially what a researcher would
 -- use when studying the evolutionary history among this class of receptors.
 -- The six sets represents different subfamilies of receptors.
---
+
 fam1 = [("PPRA_Human" , "VETVTELTEFAKAIPAFANLDLNDQVTLLKYGVYEAIFAMLSSVMNKDVAYGNGFITRDIMEPKFDFAMALELDDSDISLFVAAIICCPGLLNVGIEKMEGILHLQSNHPEQE"),
         ("PPRA_Mouse" , "VETVTELTEFAKAIPGFANLDLNDQVTLLKYGVYEAIFTMLSSLMNKDAYGNGFITREDIMEPKFDFAMALELDDSDISLFVAAIICCPGLLNIGIEKLEGILHLQSNHPEQE"),
         ("PPRB_Zfish" , "VETVRELTEFAKNIPGFVDLFLNDQVTLLKYGVHEAIFAMLPSLMNKDVANGKGFVTREIMEPKFEFAVALELDDSDLALFVAAIILCPGLMNVKVEQIDGIQHLQVHHPEQE"),
