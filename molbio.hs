@@ -10,12 +10,12 @@ simple = [("S1", "ACGTACGT"), ("S2", "ACCTACCT"), ("S3", "AGGAAGGT"), ("S4", "AC
 sample = [("S1", "ACGTACGT"), ("S2", "CCCTACCT"), ("S3", "AGGAAGGT"), ("S4", "CCGAAGGA"), ("S5", "AAGGAAGG")]
 figur =  [("T1", "ACATAA"), ("T2", "AAGTCA"), ("T3", "ACGTGC"), ("T4", "AAGTTC"), ("T5", "ACGTAA")]
 
--- Snabbtest vid redovisningar
-t1 = seqdata figur
 snabbtest de xs = de s1 s2 where
     s1 = head xs
     s2 = xs !! 1
 
+-- Snabbtest vid redovisningar
+t1 = seqdata figur
 t2 = snabbtest seqDistance $ seqdata figur
 t3 = snabbtest seqDistance $ seqdata foxp4
 t4 = fromMolSeqs $ seqdata foxp4
