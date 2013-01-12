@@ -1,3 +1,4 @@
+-- Imports and types {{{
 module Molbio where
 import MolSeq
 import Profile
@@ -5,7 +6,8 @@ import Evol
 import Test.HUnit
 
 type RawSeq = (String, String)
-
+-- }}}
+-- Help functions {{{
 roundToDecimals :: Integer -> Double -> Double
 roundToDecimals n = (/factor) . fromInteger . round . (*factor) where
     factor = 10^n
@@ -18,7 +20,8 @@ seqSetsToProfileDistance a b = distance (fromMolSeqs $ convertSeqs a) (fromMolSe
 
 seqSetPositionDistance :: [RawSeq] -> Int -> Int -> Double
 seqSetPositionDistance seqList posA posB = distance (convertSeqs seqList !! posA) (convertSeqs seqList !! posB)
-
+-- }}}
+-- Tests {{{
 testDistancesBetweenFamSets :: Test
 testDistancesBetweenFamSets = TestList
     [ "Distance between fam1 and fam2." ~: 171.1 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam1 fam2)
@@ -51,7 +54,8 @@ testDistancesBetweenFOXP4proteins = TestList
     , "Distance between rat and frog."    ~: 0.256 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 3 5)
     , "Distance between mouse and frog."  ~: 0.259 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 4 5)
     ]
-
+-- }}}
+-- Sequence sets {{{
 -- Simple DNA set.
 shortDNAs :: [RawSeq]
 shortDNAs =  [("T1", "ACATAA"), ("T2", "AAGTCA"), ("T3", "ACGTGC"), ("T4", "AAGTTC"), ("T5", "ACGTAA")]
@@ -117,3 +121,4 @@ fam5 = [("5A1_Human" , "DQTFISIVDWARRCMVFKELEVADQMTLLQNCWSELLVFDHIYRQVQHLLVTGQEV
         ("5A4_Zfish" , "DQTLFSIVEWARSCIFFKELKVGDQMKLLHNCWSELLVLDYVARQLHHLLITGQEVELGMIQRGQELVQELQLDRRETACLKYLILFNKLLENQPVESVEQVEYTLCAYPQDS"),
         ("5A5_Zfish" , "DQTLFGLVEWARNCELFKELKVDDQMVLLQSCWSELLVLDHLCRQVAYCLITGQQIEASLVSRAQDLVTSLQLDREEFVCLKYLVLFNKSVQNRRVEQTERVDHTMQTHPQEG"),
         ("5B1_Fly"   , "DHRLYKIVKWCKSLPLFKNISIDDQICLLINSWCELLLFSCCFRSIDTKMSQGRKITLTCIERMLNLTDRLRVDRYEYVAMKVIVLLQTELQEAVVRECEKAAYTLAHYPLEG")]
+-- }}}
