@@ -15,48 +15,48 @@ roundToDecimals n = (/factor) . fromInteger . round . (*factor) where
 convertSeqs :: [RawSeq] -> [MolSeq]
 convertSeqs = map $ uncurry string2seq
 
-seqSetsToProfileDistance :: [RawSeq] -> [RawSeq] -> Double
-seqSetsToProfileDistance a b = distance (fromMolSeqs $ convertSeqs a) (fromMolSeqs $ convertSeqs b)
+seqListsToProfileDistance :: [RawSeq] -> [RawSeq] -> Double
+seqListsToProfileDistance a b = distance (fromMolSeqs $ convertSeqs a) (fromMolSeqs $ convertSeqs b)
 
-seqSetPositionDistance :: [RawSeq] -> Int -> Int -> Double
-seqSetPositionDistance seqList posA posB = distance (convertSeqs seqList !! posA) (convertSeqs seqList !! posB)
+seqListPositionDistance :: [RawSeq] -> Int -> Int -> Double
+seqListPositionDistance seqList posA posB = distance (convertSeqs seqList !! posA) (convertSeqs seqList !! posB)
 -- }}}
 -- Tests {{{
-testDistancesBetweenFamSets :: Test
-testDistancesBetweenFamSets = TestList
-    [ "Distance between fam1 and fam2." ~: 171.1 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam1 fam2)
-    , "Distance between fam1 and fam3." ~: 176.8 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam1 fam3)
-    , "Distance between fam1 and fam4." ~: 167.2 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam1 fam4)
-    , "Distance between fam1 and fam5." ~: 179.3 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam1 fam5)
-    , "Distance between fam2 and fam3." ~: 151.7 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam2 fam3)
-    , "Distance between fam2 and fam4." ~: 161.3 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam2 fam4)
-    , "Distance between fam2 and fam5." ~: 151.2 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam2 fam5)
-    , "Distance between fam3 and fam4." ~: 160.0 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam3 fam4)
-    , "Distance between fam3 and fam5." ~: 154.1 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam3 fam5)
-    , "Distance between fam4 and fam5." ~: 167.0 ~=? roundToDecimals 1 (seqSetsToProfileDistance fam4 fam5)
+testDistancesBetweenFamLists :: Test
+testDistancesBetweenFamLists = TestList
+    [ "Distance between fam1 and fam2." ~: 171.1 ~=? roundToDecimals 1 (seqListsToProfileDistance fam1 fam2)
+    , "Distance between fam1 and fam3." ~: 176.8 ~=? roundToDecimals 1 (seqListsToProfileDistance fam1 fam3)
+    , "Distance between fam1 and fam4." ~: 167.2 ~=? roundToDecimals 1 (seqListsToProfileDistance fam1 fam4)
+    , "Distance between fam1 and fam5." ~: 179.3 ~=? roundToDecimals 1 (seqListsToProfileDistance fam1 fam5)
+    , "Distance between fam2 and fam3." ~: 151.7 ~=? roundToDecimals 1 (seqListsToProfileDistance fam2 fam3)
+    , "Distance between fam2 and fam4." ~: 161.3 ~=? roundToDecimals 1 (seqListsToProfileDistance fam2 fam4)
+    , "Distance between fam2 and fam5." ~: 151.2 ~=? roundToDecimals 1 (seqListsToProfileDistance fam2 fam5)
+    , "Distance between fam3 and fam4." ~: 160.0 ~=? roundToDecimals 1 (seqListsToProfileDistance fam3 fam4)
+    , "Distance between fam3 and fam5." ~: 154.1 ~=? roundToDecimals 1 (seqListsToProfileDistance fam3 fam5)
+    , "Distance between fam4 and fam5." ~: 167.0 ~=? roundToDecimals 1 (seqListsToProfileDistance fam4 fam5)
     ]
 
 testDistancesBetweenFOXP4proteins :: Test
 testDistancesBetweenFOXP4proteins = TestList
-    [ "Distance between human and cow."   ~: 0.090 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 0 1)
-    , "Distance between human and dog."   ~: 0.055 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 0 2)
-    , "Distance between human and rat."   ~: 0.051 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 0 3)
-    , "Distance between human and mouse." ~: 0.055 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 0 4)
-    , "Distance between human and frog."  ~: 0.245 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 0 5)
-    , "Distance between cow and dog."     ~: 0.119 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 1 2)
-    , "Distance between cow and rat."     ~: 0.126 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 1 3)
-    , "Distance between cow and mouse."   ~: 0.124 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 1 4)
-    , "Distance between cow and frog."    ~: 0.314 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 1 5)
-    , "Distance between dog and rat."     ~: 0.090 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 2 3)
-    , "Distance between dog and mouse."   ~: 0.090 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 2 4)
-    , "Distance between dog and frog."    ~: 0.272 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 2 5)
-    , "Distance between rat and mouse."   ~: 0.017 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 3 4)
-    , "Distance between rat and frog."    ~: 0.256 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 3 5)
-    , "Distance between mouse and frog."  ~: 0.259 ~=? roundToDecimals 3 (seqSetPositionDistance foxp4 4 5)
+    [ "Distance between human and cow."   ~: 0.090 ~=? roundToDecimals 3 (seqListPositionDistance foxp4 0 1)
+    , "Distance between human and dog."   ~: 0.055 ~=? roundToDecimals 3 (seqListPositionDistance foxp4 0 2)
+    , "Distance between human and rat."   ~: 0.051 ~=? roundToDecimals 3 (seqListPositionDistance foxp4 0 3)
+    , "Distance between human and mouse." ~: 0.055 ~=? roundToDecimals 3 (seqListPositionDistance foxp4 0 4)
+    , "Distance between human and frog."  ~: 0.245 ~=? roundToDecimals 3 (seqListPositionDistance foxp4 0 5)
+    , "Distance between cow and dog."     ~: 0.119 ~=? roundToDecimals 3 (seqListPositionDistance foxp4 1 2)
+    , "Distance between cow and rat."     ~: 0.126 ~=? roundToDecimals 3 (seqListPositionDistance foxp4 1 3)
+    , "Distance between cow and mouse."   ~: 0.124 ~=? roundToDecimals 3 (seqListPositionDistance foxp4 1 4)
+    , "Distance between cow and frog."    ~: 0.314 ~=? roundToDecimals 3 (seqListPositionDistance foxp4 1 5)
+    , "Distance between dog and rat."     ~: 0.090 ~=? roundToDecimals 3 (seqListPositionDistance foxp4 2 3)
+    , "Distance between dog and mouse."   ~: 0.090 ~=? roundToDecimals 3 (seqListPositionDistance foxp4 2 4)
+    , "Distance between dog and frog."    ~: 0.272 ~=? roundToDecimals 3 (seqListPositionDistance foxp4 2 5)
+    , "Distance between rat and mouse."   ~: 0.017 ~=? roundToDecimals 3 (seqListPositionDistance foxp4 3 4)
+    , "Distance between rat and frog."    ~: 0.256 ~=? roundToDecimals 3 (seqListPositionDistance foxp4 3 5)
+    , "Distance between mouse and frog."  ~: 0.259 ~=? roundToDecimals 3 (seqListPositionDistance foxp4 4 5)
     ]
 -- }}}
--- Sequence sets {{{
--- Simple DNA set.
+-- Sequence lists {{{
+-- Simple DNA list.
 shortDNAs :: [RawSeq]
 shortDNAs =  [("T1", "ACATAA"), ("T2", "AAGTCA"), ("T3", "ACGTGC"), ("T4", "AAGTTC"), ("T5", "ACGTAA")]
 
@@ -69,10 +69,10 @@ foxp4 = [("FOXP4_HUMAN" , "EMSPAELLHFQQQQALQVARQFLLQQASGLSSPGNNDSKQSAVQVPVSVAMMS
          ("FOXP4_MOUSE" , "EMSPAELLHFQQQQALQVARQFLLQQASSLNSPGNNDSKQSAVQVPVSVAMMSQQMLTPQQMQQILSPPQLQALLQQQQALMLQQLQEYYKKQQEQLHLQLLTQQQAGKQQPKEALGNKQLAFQQQLLQMQQLQQQHLLNLQRQGLVSLQPSQASGPLQALPQAVCPTDLPQLWKGEGAPAEDSGRQEGLDLASTAVTSFASPKVSPPLSHHPLPNGQPTRRDSSSHEETSPLYGHGECKWPGCETLCEDLGQFIKHLNTEHALDDRSTAQCRVQMQVVQQLEIQLRLQAMMAHLHMRPSEPKPFSQPVTVSADPFPDGLVHPPTSAAAPVTPLRPPGLGSASLHSGGPARRRSNDKFCSPISSELAQNHEFYKNADVRPPFTYASLIRQAILETPDRQLTLNEIYNWFTRMFAYFRRNTATWKNAVRHNLSLHKCFVRVENVKGAVWTVDEREYQKRRPPKMTGSPTLVKNMISGLSYGALNASYQAALAESSFPLLSNPGMLNSASSLLPLSQEDLGVPGEPLPSNGSSPRLSPQYSHQIQVKEEPAEEDRRPGPLGAPNPSTVGPPEDRDLEEDLGGEDI"),
          ("FOXP4_FROG"  , "ELSPAELLHFQQQQALQMARQLLLQQATGLSSPSSTDNKQPSVQVPVSVAMMSPGMITPQQMQQILSPTQLQAVLQQQQALMLQQLQEYYKKQQEQLHLQLLSQQQAGKQQPKESLGNKQLAFQQQLLQMQQLQQQHLLNLQRQNLVGLQSGQGPLPIQSLPQAVSPSDLQQLLKEMSSNQEESSKQDTVDLTTSITTSFPNSKVSLPTIHPSLPNGQNTRRDSMSHYESSPLYGHGECRWPGCEALCEDMGQFIKHLNTEHALDDRSTAQCRVQMQVVQQLEIQLRLQAMMTHLHMRPSEPKPFSQPNKMSPDTFPDGLPQPPTSATAPITPLRTSVISSSSLPSVGPVRRRIVDKFSTPISSELAQNHEFYKNAEVRPPFTYASLIRQAILDTPDRQLTLNEIYNWFTRMFAYFRRNTATWKNAVRHNLSLHKCFVRVENVKGAVWTVDELEYQKRRPPKMTGSPTLVKNMISGLGYSALNASYQAALAESSFPLLNSPPLHNSSGSVLHGGHDDVTSTGEPGNSNGSSPRLSPQYSQSIHVKEEPAEDDVRPASLSAPTNQTTVLPEDRDIEPETPMEDL")]
 
--- Below follows protein sequences taken from six sets of nuclear hormone receptors.
+-- Below follows protein sequences taken from six lists of nuclear hormone receptors.
 -- The data has been simplified, but this is essentially what a researcher would
 -- use when studying the evolutionary history among this class of receptors.
--- The six sets represents different subfamilies of receptors.
+-- The six lists represent different subfamilies of receptors.
 
 fam1 :: [RawSeq]
 fam1 = [("PPRA_Human" , "VETVTELTEFAKAIPAFANLDLNDQVTLLKYGVYEAIFAMLSSVMNKDVAYGNGFITRDIMEPKFDFAMALELDDSDISLFVAAIICCPGLLNVGIEKMEGILHLQSNHPEQE"),
