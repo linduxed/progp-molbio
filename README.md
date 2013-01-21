@@ -92,5 +92,6 @@ In other words, you sum both positions and different letters in each position.
 
 ### Testing
 
-The provided file ```molbio.hs``` contains a range of different sequences which
-can be used for testing.
+The file ```molbio.hs``` contains a range of different sequences which can be
+used for testing.
+Unit tests have been written for course provided reference values.
