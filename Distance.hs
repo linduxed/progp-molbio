@@ -1,16 +1,16 @@
-module Evol where
+module Distance where
 
 import MolSeq
 import Profile
 
-class Evol a where
+class Distance a where
     distance :: a -> a -> Double
 
-instance Evol MolSeq where
+instance Distance MolSeq where
     distance a b = seqDistance a b
 
-instance Evol Profile where
+instance Distance Profile where
     distance a b = profileDistance a b
 
-distanceMatrix :: Evol a => [a] -> [[Double]]
+distanceMatrix :: Distance a => [a] -> [[Double]]
 distanceMatrix xs = [ map (uncurry distance . (,) elems) xs | elems <- xs ]

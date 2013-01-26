@@ -2,7 +2,7 @@
 module Molbio where
 import MolSeq
 import Profile
-import Evol
+import Distance
 import Test.HUnit
 
 type RawSeq = (String, String)
