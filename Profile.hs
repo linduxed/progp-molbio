@@ -28,6 +28,9 @@ allSequencesType seqList
 
 {-
  - Matrices are transposed so that columns are more easily compared.
+ -
+ - Note that since fromMolSeqs already checks that all sequences are of the
+ - same type, here seqType only checks the molType of the head.
  -}
 generateMatrix :: [MolSeq] -> ProfileMatrix
 generateMatrix sequences = transpose $ map (generateRow seqLetters) (transpose onlyStrings) where
