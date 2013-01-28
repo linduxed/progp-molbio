@@ -51,8 +51,9 @@ generateRow (letter:letters) seqHeads = letterRatio : generateRow letters seqHea
  - Since the provided matrices need to be of identical structure and sizes, the
  - values will be properly aligned for zipping.
  -}
-profileDistance :: Profile -> Profile -> Double
-profileDistance aProf bProf = sum $ map abs $ zipWith (-) flatMatrixA flatMatrixB where
+profileDistance :: Profile -> Profile -> (Name, Name, Double)
+profileDistance aProf bProf = (profName aProf, profName bProf, distance) where
+    distance    = sum $ map abs $ zipWith (-) flatMatrixA flatMatrixB
     flatMatrixA = flatTransMat aProf
     flatMatrixB = flatTransMat bProf
 
