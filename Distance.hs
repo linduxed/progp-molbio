@@ -3,8 +3,10 @@ module Distance where
 import MolSeq
 import Profile
 
+type DistanceTriplet = (Name, Name, Double)
+
 class Distance a where
-    distance :: a -> a -> Double
+    distance :: a -> a -> DistanceTriplet
 
 instance Distance MolSeq where
     distance = seqDistance
@@ -12,5 +14,5 @@ instance Distance MolSeq where
 instance Distance Profile where
     distance = profileDistance
 
-distanceMatrix :: Distance a => [a] -> [[Double]]
-distanceMatrix xs = [ map (uncurry distance . (,) elems) xs | elems <- xs ]
+makeDistanceMatrix :: Distance a => [a] -> [[DistanceTriplet]]
+makeDistanceMatrix xs = [ map (uncurry distance . (,) elems) xs | elems <- xs ]
