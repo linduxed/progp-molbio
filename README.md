@@ -133,17 +133,18 @@ The workings of the algorithm are best explained by the corresponding
   instances of Distance. A function called ```distance``` must be implemented
   for all instances.
 * Implement the function ```distanceMatrix``` inside ```Distance```, which
-  takes a list of MolSeq or Profile as input and returns all pairs of
-  distances, in the shape of above mentioned triplets.
+  takes a list of ```MolSeq``` or ```Profile``` as input and returns all pairs
+  of distances, in the shape of above mentioned triplets.
 
 ## Evolutionary trees
 
 * Implement a function called ```neighbor``` which takes output data from
   ```distanceMatrix``` and returns a string representing an evolutionary tree,
   using the Newick format, generated with the Neigbor Joining algorithm.
-* The algorithm is to be implemented in a separate module called NJ, with the
-  only exported function in it being ```neighbor```.
-* The data structures Data.Set and Data.Map need to be used in meaningful ways.
+* The algorithm is to be implemented in a separate module called ```NJ```, with
+  the only exported function in it being ```neighbor```.
+* The data structures ```Data.Set``` and ```Data.Map``` need to be used in
+  meaningful ways.
 
 ### Testing
 
