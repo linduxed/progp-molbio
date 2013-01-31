@@ -71,6 +71,34 @@ distance matrix.
 This application will represent entries in the matrix with triplets of the
 format *(Name 1, Name 2, Distance)*.
 
+# Evolutionary trees
+
+Evolutionary trees (also called phylogenies) have their use in enlightening us
+as to how a species has come into existence. The knowledge of how certain genes
+change over time can explain their purpose and function, which is of great use
+in medicine.
+
+To generate an evolutionary tree you need a set of sequences (DNA or proteins),
+with the result being a graph where all the inner vertices have a degree of 3.
+
+## Output format
+
+Evolutionary trees are often written in a format called *Newick*. For details
+on the exact workings of the format, refer to either [this Wikipedia
+article](http://en.wikipedia.org/wiki/Newick_format) or [this
+webpage](http://evolution.genetics.washington.edu/phylip/newicktree.html).
+
+This application will not attempt to build trees with less than three input
+sequences, so the smallest tree it will print out would be *(a,b,c)*.
+
+## Algorithm
+
+The most commonly used and well known algorithm for generating phylogenies is
+Neighbor Joining, which is used in this application.
+
+The workings of the algorithm are best explained by the corresponding
+[Wikipedia article](http://en.wikipedia.org/wiki/Neighbor_joining).
+
 # Tasks
 
 ## Sequences
@@ -107,6 +135,15 @@ format *(Name 1, Name 2, Distance)*.
 * Implement the function ```distanceMatrix``` inside ```Distance```, which
   takes a list of MolSeq or Profile as input and returns all pairs of
   distances, in the shape of above mentioned triplets.
+
+## Evolutionary trees
+
+* Implement a function called ```neighbor``` which takes output data from
+  ```distanceMatrix``` and returns a string representing an evolutionary tree,
+  using the Newick format, generated with the Neigbor Joining algorithm.
+* The algorithm is to be implemented in a separate module called NJ, with the
+  only exported function in it being ```neighbor```.
+* The data structures Data.Set and Data.Map need to be used in meaningful ways.
 
 ### Testing
 
