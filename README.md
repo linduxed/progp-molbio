@@ -62,6 +62,15 @@ __d(M, M') = \sum i=1n \sum j \in {A,C,G,T} |m(i,j)-m'(i,j)|__
 
 In other words, you sum both positions and different letters in each position.
 
+# Calculation of distance matrices
+
+Both in studies of molecular sequences and studies of profiles you occasionally
+want to calculate the pairwise distances and summarize these in a so called
+distance matrix.
+
+This application will represent entries in the matrix with triplets of the
+format *(Name 1, Name 2, Distance)*.
+
 # Tasks
 
 ## Sequences
@@ -89,6 +98,15 @@ In other words, you sum both positions and different letters in each position.
 * Implement ```profileDistance :: Profile -> Profile -> Double```. The distance
   between two profiles _M_ and _M'_ should be measured with the the above
   mentioned formula _d(M, M')_.
+
+## Distance matrices
+
+* Implement the ```Distance``` typeclass and let MolSeq and Profile be
+  instances of Distance. A function called ```distance``` must be implemented
+  for all instances.
+* Implement the function ```distanceMatrix``` inside ```Distance```, which
+  takes a list of MolSeq or Profile as input and returns all pairs of
+  distances, in the shape of above mentioned triplets.
 
 ### Testing
 
