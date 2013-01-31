@@ -102,8 +102,8 @@ format *(Name 1, Name 2, Distance)*.
 ## Distance matrices
 
 * Implement the ```Distance``` typeclass and let MolSeq and Profile be
-  instances of Distance. All instances must implement a function called
-  ```distance```.  
+  instances of Distance. A function called ```distance``` must be implemented
+  for all instances.
 * Implement the function ```distanceMatrix``` inside ```Distance```, which
   takes a list of MolSeq or Profile as input and returns all pairs of
   distances, in the shape of above mentioned triplets.
