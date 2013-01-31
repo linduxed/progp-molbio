@@ -77,9 +77,11 @@ format *(Name 1, Name 2, Distance)*.
 
 * Create a data type called ```MolSeq``` for molecular sequences which defines the
   name, sequence and whether it's DNA or a protein.
+
 * Implement ```string2seq :: String -> String -> MolSeq```, where the first
   argument should be a name and the second one a sequence. This function needs
   to be able to differentiate between DNA and proteins.
+
 * Implement ```seqDistance :: MolSeq -> MolSeq -> Double```, which compares two
   DNA sequences or two protein sequences and returns their evolutionary
   distance. Comparing DNA with a protein should result in an error.
@@ -92,9 +94,11 @@ format *(Name 1, Name 2, Distance)*.
 	* Whether it's a DNA or a Protein profile.
 	* How many sequences the profile is built from.
 	* A name of the profile.
+
 * Implement ```fromMolSeqs :: [MolSeq] -> Profile```. The profile name is
   arbitrary and may, for example, be obtained by using the name of the first
   sequence.
+
 * Implement ```profileDistance :: Profile -> Profile -> Double```. The distance
   between two profiles _M_ and _M'_ should be measured with the the above
   mentioned formula _d(M, M')_.
@@ -104,6 +108,7 @@ format *(Name 1, Name 2, Distance)*.
 * Implement the ```Distance``` typeclass and let MolSeq and Profile be
   instances of Distance. All instances must implement a function called
   ```distance```.
+
 * Implement the function ```distanceMatrix``` inside ```Distance```, which
   takes a list of MolSeq or Profile as input and returns all pairs of
   distances, in the shape of above mentioned triplets.
