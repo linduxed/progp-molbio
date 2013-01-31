@@ -148,6 +148,6 @@ The workings of the algorithm are best explained by the corresponding
 
 ### Testing
 
-The file ```molbio.hs``` contains a range of different sequences which can be
+The file ```tests.hs``` contains a range of different sequences which can be
 used for testing.
 Unit tests have been written for course provided reference values.
