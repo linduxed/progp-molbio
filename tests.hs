@@ -1,8 +1,9 @@
 -- Imports and types {{{
-module Molbio where
+module Tests where
 import MolSeq
 import Profile
 import Distance
+import NJ
 import Test.HUnit
 
 type RawSeq = (String, String)
