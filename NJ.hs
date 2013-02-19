@@ -11,6 +11,10 @@ import qualified Data.Map as Map
 matrixColumnNamesToSet :: [[DistanceTriplet]] -> Set.Set String
 matrixColumnNamesToSet = Set.fromList . map (\(_,a,_) -> a) . head
 
+mapNamesToSet :: Map.Map (String, String) Double -> Set.Set String
+mapNamesToSet = Set.fromList . unpairs . Map.keys where
+    unpairs = concatMap (\(x, y) -> [x, y])
+
 matrixToMap :: [[DistanceTriplet]] -> Map.Map (String, String) Double
 matrixToMap inMatrix
     | (not . dMatIsSymmetric) inMatrix = error "Cannot use a non-symmetric distance matrix."
