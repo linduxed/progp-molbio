@@ -43,4 +43,17 @@ formatMatrixForMap inMatrix = map (sortStringPair . groupStrings) flatMatrix whe
 -- Neighbor Joining algorithm {{{
 neighbor :: [[DistanceTriplet]]
 neighbor = undefined
+
+{-
+ - The Wikipedia entry for the algorithm calculates a matrix for this step, but
+ - since this code already uses Maps we'll stick with that.
+ - If the code turns out to be slow for larger Maps it could be optimized by
+ - pre-calculating the row sums for sumFilteredKeys.
+ -}
+calculateQMap :: Map.Map (String, String) Double -> Map.Map (String, String) Double
+calculateQMap distMap = Map.mapWithKey qMatrixElemEquation distMap where
+    qMatrixElemEquation (i, j) dist = (numberOfNames - 2) * dist - sumFilteredKeys i - sumFilteredKeys j
+
+    numberOfNames        = fromIntegral $ Set.size $ mapNamesToSet distMap
+    sumFilteredKeys name = sum $ Map.elems $ Map.filterWithKey (\(a, b) _ -> a == name || b == name) distMap
 -- }}}
