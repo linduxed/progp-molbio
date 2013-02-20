@@ -52,7 +52,9 @@ neighbor = undefined
  -}
 calculateQMap :: Map.Map (String, String) Double -> Map.Map (String, String) Double
 calculateQMap distMap = Map.mapWithKey qMatrixElemEquation distMap where
-    qMatrixElemEquation (i, j) dist = (numberOfNames - 2) * dist - sumFilteredKeys i - sumFilteredKeys j
+    qMatrixElemEquation (i, j) dist
+        | i == j    = 0 -- Only compare pairs.
+        | otherwise = (numberOfNames - 2) * dist - sumFilteredKeys i - sumFilteredKeys j
 
     numberOfNames        = fromIntegral $ Set.size $ mapNamesToSet distMap
     sumFilteredKeys name = sum $ Map.elems $ Map.filterWithKey (\(a, b) _ -> a == name || b == name) distMap
