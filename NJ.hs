@@ -1,4 +1,4 @@
--- Imports {{{
+-- Imports and types{{{
 module NJ where
 -- TODO: when module is finished, only "neighbor" should be exported
 
@@ -6,16 +6,19 @@ import Distance
 import Data.List (transpose)
 import qualified Data.Set as Set
 import qualified Data.Map as Map
+
+type EdgeMap = Map.Map (String, String) Double
+type NodeSet = Set.Set String
 -- }}}
 -- Matrix import functions {{{
-matrixColumnNamesToSet :: [[DistanceTriplet]] -> Set.Set String
+matrixColumnNamesToSet :: [[DistanceTriplet]] -> NodeSet
 matrixColumnNamesToSet = Set.fromList . map (\(_,a,_) -> a) . head
 
-mapNamesToSet :: Map.Map (String, String) Double -> Set.Set String
+mapNamesToSet :: EdgeMap -> NodeSet
 mapNamesToSet = Set.fromList . unpairs . Map.keys where
     unpairs = concatMap (\(x, y) -> [x, y])
 
-matrixToMap :: [[DistanceTriplet]] -> Map.Map (String, String) Double
+matrixToMap :: [[DistanceTriplet]] -> EdgeMap
 matrixToMap inMatrix
     | (not . dMatIsSymmetric) inMatrix = error "Cannot use a non-symmetric distance matrix."
     | otherwise                        = Map.fromList $ formatMatrixForMap inMatrix
@@ -50,7 +53,7 @@ neighbor = undefined
  - If the code turns out to be slow for larger Maps it could be optimized by
  - pre-calculating the row sums for sumFilteredKeys.
  -}
-calculateQMap :: Map.Map (String, String) Double -> Map.Map (String, String) Double
+calculateQMap :: EdgeMap -> EdgeMap
 calculateQMap distMap = Map.mapWithKey qMatrixElemEquation distMap where
     qMatrixElemEquation (i, j) dist
         | i == j    = 0 -- Only compare pairs.
