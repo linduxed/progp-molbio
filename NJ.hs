@@ -3,7 +3,8 @@ module NJ where
 -- TODO: when module is finished, only "neighbor" should be exported
 
 import Distance
-import Data.List (transpose)
+import Data.List (transpose, minimumBy)
+import Data.Ord (comparing)
 import qualified Data.Set as Set
 import qualified Data.Map as Map
 
@@ -61,4 +62,7 @@ calculateQMap distMap = Map.mapWithKey qMatrixElemEquation distMap where
 
     numberOfNames        = fromIntegral $ Set.size $ mapNamesToSet distMap
     sumFilteredKeys name = sum $ Map.elems $ Map.filterWithKey (\(a, b) _ -> a == name || b == name) distMap
+
+findLowestValueKey :: EdgeMap -> (String, String)
+findLowestValueKey inMap = fst $ minimumBy (comparing snd) $ Map.toList inMap
 -- }}}
