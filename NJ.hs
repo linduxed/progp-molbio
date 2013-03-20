@@ -45,8 +45,21 @@ formatMatrixForMap inMatrix = map (sortStringPair . groupStrings) flatMatrix whe
         | otherwise = ((y, x), z)
 -- }}}
 -- Neighbor Joining algorithm {{{
-neighbor :: [[DistanceTriplet]]
-neighbor = undefined
+neighbor :: [[DistanceTriplet]] -> (NodeSet, EdgeMap)
+neighbor inMatrix = neighborLoop startingNodes firstQMap startingNodes noEdges where
+    firstQMap     = calculateQMap $ matrixToMap inMatrix
+    startingNodes = matrixColumnNamesToSet inMatrix
+    noEdges       = Map.empty :: EdgeMap
+
+    neighborLoop unusedNodes qMap allNodes allEdges
+        | Set.size unusedNodes > 3 = neighborLoop newUnusedNodes newQMap oldAndNewNodes newEdges
+        | otherwise                = (allNodes, allEdges)
+        where
+            (newQMap, newNode) = createQMapWithConnectingNode qMap
+
+            newUnusedNodes = undefined
+            oldAndNewNodes = allNodes `Set.union` newNode
+            newEdges       = undefined
 
 {-
  - The Wikipedia entry for the algorithm calculates a matrix for this step, but
@@ -65,4 +78,13 @@ calculateQMap distMap = Map.mapWithKey qMatrixElemEquation distMap where
 
 findLowestValueKey :: EdgeMap -> (String, String)
 findLowestValueKey inMap = fst $ minimumBy (comparing snd) $ Map.toList inMap
+
+createQMapWithConnectingNode :: EdgeMap -> (EdgeMap, NodeSet)
+createQMapWithConnectingNode inMap = (newQMap, Set.singleton newNodeName) where
+    (lowNodeA, lowNodeB) = findLowestValueKey inMap
+    newNodeName          = "(" ++ lowNodeA ++ " - " ++ lowNodeB ++ ")" -- Might get pretty long.
+
+    newQMap             = (inMap `Map.difference` edgesToRemovedNodes) `Map.union` edgesToNewNode
+    edgesToRemovedNodes = Map.filterWithKey (\(a, b) _ -> any (`elem` [lowNodeA, lowNodeB]) [a, b]) inMap
+    edgesToNewNode      = undefined
 -- }}}
