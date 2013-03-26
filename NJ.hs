@@ -43,20 +43,20 @@ formatMatrixForMap inMatrix = map (sortStringPair . groupStrings) flatMatrix whe
 -- }}}
 -- Neighbor Joining algorithm {{{
 neighbor :: [[DistanceTriplet]] -> (NodeSet, EdgeMap)
-neighbor inMatrix = neighborLoop startingNodes firstQMap startingNodes noEdges where
-    firstQMap     = calculateQMap $ matrixToMap inMatrix
-    startingNodes = mapNamesToSet firstQMap
+neighbor inMatrix = neighborLoop startingNodes firstDMap startingNodes noEdges where
+    firstDMap     = matrixToMap inMatrix
+    startingNodes = mapNamesToSet firstDMap
     noEdges       = Map.empty :: EdgeMap
 
-    neighborLoop unusedNodes qMap allNodes allEdges
-        | Set.size unusedNodes > 3 = neighborLoop newUnusedNodes newQMap oldAndNewNodes newEdges
-        | otherwise                = (allNodes, allEdges)
+    neighborLoop unusedNodes distanceMap treeNodes treeEdges
+        | Set.size unusedNodes > 3 = neighborLoop newUnusedNodes newDMap oldAndNewNodes newEdges
+        | otherwise                = (treeNodes, connectRemainingThreeNodes distanceMap treeEdges)
         where
-            (newQMap, newNode) = createQMapWithConnectingNode qMap
+            (newDMap, newNode) = createDMapWithConnectingNode distanceMap
 
-            newUnusedNodes = undefined
-            oldAndNewNodes = allNodes `Set.union` newNode
-            newEdges       = undefined
+            newUnusedNodes = undefined -- Remove connected nodes, add connecting node.
+            oldAndNewNodes = treeNodes `Set.union` newNode
+            newEdges       = undefined -- Add edges to connecting node, remove edges to the connected two.
 
 {-
  - The Wikipedia entry for the algorithm calculates a matrix for this step, but
@@ -65,23 +65,26 @@ neighbor inMatrix = neighborLoop startingNodes firstQMap startingNodes noEdges w
  - pre-calculating the row sums for sumFilteredKeys.
  -}
 calculateQMap :: EdgeMap -> EdgeMap
-calculateQMap distMap = Map.mapWithKey qMatrixElemEquation distMap where
+calculateQMap inMap = Map.mapWithKey qMatrixElemEquation inMap where
     qMatrixElemEquation (i, j) dist
         | i == j    = 0 -- Only compare pairs.
         | otherwise = (numberOfNames - 2) * dist - sumFilteredKeys i - sumFilteredKeys j
 
-    numberOfNames        = fromIntegral $ Set.size $ mapNamesToSet distMap
-    sumFilteredKeys name = sum $ Map.elems $ Map.filterWithKey (\(a, b) _ -> a == name || b == name) distMap
+    numberOfNames        = fromIntegral $ Set.size $ mapNamesToSet inMap
+    sumFilteredKeys name = sum $ Map.elems $ Map.filterWithKey (\(a, b) _ -> a == name || b == name) inMap
 
 findLowestValueKey :: EdgeMap -> (String, String)
 findLowestValueKey inMap = fst $ minimumBy (comparing snd) $ Map.toList inMap
 
-createQMapWithConnectingNode :: EdgeMap -> (EdgeMap, NodeSet)
-createQMapWithConnectingNode inMap = (newQMap, Set.singleton newNodeName) where
+createDMapWithConnectingNode :: EdgeMap -> (EdgeMap, NodeSet)
+createDMapWithConnectingNode inMap = (newQMap, Set.singleton newNodeName) where
     (lowNodeA, lowNodeB) = findLowestValueKey inMap
     newNodeName          = "(" ++ lowNodeA ++ " - " ++ lowNodeB ++ ")" -- Might get pretty long.
 
     newQMap             = (inMap `Map.difference` edgesToRemovedNodes) `Map.union` edgesToNewNode
     edgesToRemovedNodes = Map.filterWithKey (\(a, b) _ -> any (`elem` [lowNodeA, lowNodeB]) [a, b]) inMap
     edgesToNewNode      = undefined
+
+connectRemainingThreeNodes :: EdgeMap -> EdgeMap -> EdgeMap
+connectRemainingThreeNodes = undefined
 -- }}}
