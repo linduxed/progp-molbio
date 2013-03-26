@@ -5,6 +5,7 @@ module NJ where
 import Distance
 import Data.List (transpose, minimumBy)
 import Data.Ord (comparing)
+import Data.Maybe
 import qualified Data.Set as Set
 import qualified Data.Map as Map
 
@@ -74,16 +75,39 @@ calculateQMap inMap = Map.mapWithKey qMatrixElemEquation inMap where
     sumFilteredKeys name = sum $ Map.elems $ Map.filterWithKey (\(a, b) _ -> a == name || b == name) inMap
 
 findLowestValueKey :: EdgeMap -> (String, String)
-findLowestValueKey inMap = fst $ minimumBy (comparing snd) $ Map.toList inMap
+findLowestValueKey inMap = fst $ minimumBy (comparing snd) $ Map.toList $ Map.filterWithKey isRealPair inMap where
+    isRealPair (a, b) _ = a /= b
 
 createDMapWithConnectingNode :: EdgeMap -> (EdgeMap, NodeSet)
-createDMapWithConnectingNode inMap = (newQMap, Set.singleton newNodeName) where
-    (lowNodeA, lowNodeB) = findLowestValueKey inMap
-    newNodeName          = "(" ++ lowNodeA ++ " - " ++ lowNodeB ++ ")" -- Might get pretty long.
+createDMapWithConnectingNode inMap = (newDMap, Set.singleton newNodeName) where
+    (nA, nB)    = findLowestValueKey inMap
+    newNodeName = "(" ++ nA ++ " - " ++ nB ++ ")" -- Might get pretty long.
 
-    newQMap             = (inMap `Map.difference` edgesToRemovedNodes) `Map.union` edgesToNewNode
-    edgesToRemovedNodes = Map.filterWithKey (\(a, b) _ -> any (`elem` [lowNodeA, lowNodeB]) [a, b]) inMap
-    edgesToNewNode      = undefined
+    newDMap            = dMapWithoutAorB `Map.union` edgesFromOldToNew `Map.union` edgesFromNewToAorB
+    dMapWithoutAorB    = inMap `Map.difference` edgesToAorB
+    edgesToAorB        = Map.filterWithKey (\(x, y) _ -> any (`elem` [nA, nB]) [x, y]) inMap
+    notAorB            = Set.toList $ mapNamesToSet dMapWithoutAorB
+    edgesFromOldToNew  = Map.fromList $ map (\x -> ((newNodeName, x), oldToNewNodeDistance x)) notAorB
+    edgesFromNewToAorB = newEdgeA `Map.union` newEdgeB
+
+    newEdgeA = Map.singleton (newNodeName, nA) edgeADistance
+    newEdgeB = Map.singleton (newNodeName, nB) edgeBDistance
+
+    edgeADistance        = (d nA nB / 2) + ((1 / (2 * numberOfNames)) * (sumFilteredKeys nA - sumFilteredKeys nB))
+    edgeBDistance        = d nA nB - edgeADistance
+    sumFilteredKeys name = sum $ Map.elems $ Map.filterWithKey (\(a, b) _ -> a == name || b == name) inMap
+    numberOfNames        = fromIntegral $ Set.size $ mapNamesToSet inMap
+    d                    = lookupDistance inMap
+
+    -- TODO: For some reason this only returns 0 when createDMapWithConnectingNode is fed an EdgeMap.
+    oldToNewNodeDistance x = (d' nA x + d' nB x - d' nA nB) / 2 where
+        d' = lookupDistance dMapWithoutAorB
+
+-- This is a somewhat ugly way of finding the value, regardless of what
+-- order the (String, String) has. There should only be one correct order.
+lookupDistance :: EdgeMap -> String -> String -> Double
+lookupDistance dMap a b = fromMaybe reversePair $ Map.lookup (a, b) dMap where
+    reversePair = fromMaybe 0 $ Map.lookup (b, a) dMap
 
 connectRemainingThreeNodes :: EdgeMap -> EdgeMap -> EdgeMap
 connectRemainingThreeNodes = undefined
