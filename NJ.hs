@@ -12,9 +12,6 @@ type EdgeMap = Map.Map (String, String) Double
 type NodeSet = Set.Set String
 -- }}}
 -- Matrix import functions {{{
-matrixColumnNamesToSet :: [[DistanceTriplet]] -> NodeSet
-matrixColumnNamesToSet = Set.fromList . map (\(_,a,_) -> a) . head
-
 mapNamesToSet :: EdgeMap -> NodeSet
 mapNamesToSet = Set.fromList . unpairs . Map.keys where
     unpairs = concatMap (\(x, y) -> [x, y])
@@ -48,7 +45,7 @@ formatMatrixForMap inMatrix = map (sortStringPair . groupStrings) flatMatrix whe
 neighbor :: [[DistanceTriplet]] -> (NodeSet, EdgeMap)
 neighbor inMatrix = neighborLoop startingNodes firstQMap startingNodes noEdges where
     firstQMap     = calculateQMap $ matrixToMap inMatrix
-    startingNodes = matrixColumnNamesToSet inMatrix
+    startingNodes = mapNamesToSet firstQMap
     noEdges       = Map.empty :: EdgeMap
 
     neighborLoop unusedNodes qMap allNodes allEdges
