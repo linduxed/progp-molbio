@@ -61,14 +61,16 @@ neighbor inMatrix = neighborLoop startingNodes firstDMap startingNodes noEdges w
     noEdges       = Map.empty :: EdgeMap
 
     neighborLoop unusedNodes distanceMap treeNodes treeEdges
-        | Set.size unusedNodes > 3 = neighborLoop newUnusedNodes newDMap oldAndNewNodes newEdges
+        | Set.size unusedNodes > 3 = neighborLoop newUnusedNodes newDMap oldAndNewNodes newTreeEdges
         | otherwise                = (treeNodes, connectRemainingThreeNodes distanceMap treeEdges)
         where
-            (newDMap, newNode) = createDMapWithConnectingNode distanceMap
+            (connectedDMap, newNode, connectedNodes) = createDMapWithConnectingNode distanceMap
 
-            newUnusedNodes = undefined -- Remove connected nodes, add connecting node.
-            oldAndNewNodes = treeNodes `Set.union` newNode
-            newEdges       = undefined -- Add edges to connecting node, remove edges to the connected two.
+            newDMap         = connectedDMap `Map.difference` connectingEdges
+            connectingEdges = Map.filterWithKey (\(x, y) _ -> any (`elem` Set.toList connectedNodes) [x, y]) newDMap
+            newUnusedNodes  = (unusedNodes `Set.difference` connectedNodes) `Set.union` newNode
+            oldAndNewNodes  = treeNodes `Set.union` newNode
+            newTreeEdges    = treeEdges `Map.union` connectingEdges
 
 {-
  - The Wikipedia entry for the algorithm calculates a matrix for this step, but
@@ -86,8 +88,8 @@ calculateQMap inMap = Map.mapWithKey qMatrixElemEquation inMap where
 findLowestValueKey :: EdgeMap -> (String, String)
 findLowestValueKey inMap = fst $ minimumBy (comparing snd) $ Map.toList inMap
 
-createDMapWithConnectingNode :: EdgeMap -> (EdgeMap, NodeSet)
-createDMapWithConnectingNode inMap = (newDMap, Set.singleton newNodeName) where
+createDMapWithConnectingNode :: EdgeMap -> (EdgeMap, NodeSet, NodeSet)
+createDMapWithConnectingNode inMap = (newDMap, Set.singleton newNodeName, Set.fromList [nA, nB]) where
     (nA, nB)    = findLowestValueKey inMap
     newNodeName = "(" ++ nA ++ " - " ++ nB ++ ")" -- Might get pretty long.
 
