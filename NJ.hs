@@ -67,7 +67,7 @@ neighbor inMatrix = neighborLoop startingNodes firstDMap startingNodes noEdges w
             (connectedDMap, newNode, connectedNodes) = createDMapWithConnectingNode distanceMap
 
             newDMap         = connectedDMap `Map.difference` connectingEdges
-            connectingEdges = Map.filterWithKey (\(x, y) _ -> any (`elem` Set.toList connectedNodes) [x, y]) newDMap
+            connectingEdges = Map.filterWithKey (\(x, y) _ -> any (`elem` Set.toList connectedNodes) [x, y]) connectedDMap
             newUnusedNodes  = (unusedNodes `Set.difference` connectedNodes) `Set.union` newNode
             oldAndNewNodes  = treeNodes `Set.union` newNode
             newTreeEdges    = treeEdges `Map.union` connectingEdges
