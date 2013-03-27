@@ -3,7 +3,7 @@ module NJ where
 -- TODO: when module is finished, only "neighbor" should be exported
 
 import Distance
-import Data.List (transpose, minimumBy)
+import Data.List (transpose, minimumBy, (\\))
 import Data.Ord (comparing)
 import Data.Maybe
 import qualified Data.Set as Set
@@ -91,19 +91,19 @@ findLowestValueKey inMap = fst $ minimumBy (comparing snd) $ Map.toList inMap
 
 createDMapWithConnectingNode :: EdgeMap -> (EdgeMap, NodeSet, NodeSet)
 createDMapWithConnectingNode inMap = (newDMap, Set.singleton newNodeName, Set.fromList [nA, nB]) where
-    (nA, nB)    = findLowestValueKey inMap
+    (nA, nB)    = findLowestValueKey $ calculateQMap inMap
     newNodeName = "(" ++ nA ++ " - " ++ nB ++ ")" -- Might get pretty long.
 
     newDMap            = dMapWithoutAorB `Map.union` edgesFromOldToNew `Map.union` edgesFromNewToAorB
     dMapWithoutAorB    = inMap `Map.difference` edgesToAorB
     edgesToAorB        = Map.filterWithKey (\(x, y) _ -> any (`elem` [nA, nB]) [x, y]) inMap
-    notAorB            = Set.toList $ mapNamesToSet dMapWithoutAorB
+    notAorB            = Set.toList (mapNamesToSet inMap) \\ [nA, nB]
     edgesFromOldToNew  = Map.fromList $ map (\x -> ((newNodeName, x), oldToNewNodeDistance x)) notAorB
     edgesFromNewToAorB = newEdgeA `Map.union` newEdgeB
 
     newEdgeA      = Map.singleton (newNodeName, nA) edgeADistance
     newEdgeB      = Map.singleton (newNodeName, nB) edgeBDistance
-    edgeADistance = (d nA nB / 2) + ((1 / (2 * numberOfNames)) * (sumFilteredKeys nA - sumFilteredKeys nB))
+    edgeADistance = (d nA nB / 2) + ((1 / (2 * (numberOfNames - 2))) * (sumFilteredKeys nA - sumFilteredKeys nB))
     edgeBDistance = d nA nB - edgeADistance
 
     numberOfNames          = fromIntegral $ Set.size $ mapNamesToSet inMap
