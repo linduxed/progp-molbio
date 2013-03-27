@@ -41,11 +41,22 @@ formatMatrixForMap inMatrix = map (sortStringPair . groupStrings) flatMatrix whe
     sortStringPair ((x, y), z)
         | x < y     = ((x, y), z)
         | otherwise = ((y, x), z)
+
+{-
+ - Non-pairs, the diagonal of the input matrix, are of no use in the
+ - calculations, since the algorithm only cares for distances between different
+ - nodes.
+ -
+ - Also, if the non-pairs aren't removed they will in many cases become the
+ - lowest value available, being chosen in favour of real pairs.
+ -}
+removeNonPairs :: EdgeMap -> EdgeMap
+removeNonPairs = Map.filterWithKey (\(x, y) _ -> x /= y)
 -- }}}
 -- Neighbor Joining algorithm {{{
 neighbor :: [[DistanceTriplet]] -> (NodeSet, EdgeMap)
 neighbor inMatrix = neighborLoop startingNodes firstDMap startingNodes noEdges where
-    firstDMap     = matrixToMap inMatrix
+    firstDMap     = removeNonPairs $ matrixToMap inMatrix
     startingNodes = mapNamesToSet firstDMap
     noEdges       = Map.empty :: EdgeMap
 
@@ -67,16 +78,13 @@ neighbor inMatrix = neighborLoop startingNodes firstDMap startingNodes noEdges w
  -}
 calculateQMap :: EdgeMap -> EdgeMap
 calculateQMap inMap = Map.mapWithKey qMatrixElemEquation inMap where
-    qMatrixElemEquation (i, j) dist
-        | i == j    = 0 -- Only compare pairs.
-        | otherwise = (numberOfNames - 2) * dist - sumFilteredKeys i - sumFilteredKeys j
+    qMatrixElemEquation (i, j) dist = (numberOfNames - 2) * dist - sumFilteredKeys i - sumFilteredKeys j
 
     numberOfNames        = fromIntegral $ Set.size $ mapNamesToSet inMap
     sumFilteredKeys name = sum $ Map.elems $ Map.filterWithKey (\(a, b) _ -> a == name || b == name) inMap
 
 findLowestValueKey :: EdgeMap -> (String, String)
-findLowestValueKey inMap = fst $ minimumBy (comparing snd) $ Map.toList $ Map.filterWithKey isRealPair inMap where
-    isRealPair (a, b) _ = a /= b
+findLowestValueKey inMap = fst $ minimumBy (comparing snd) $ Map.toList inMap
 
 createDMapWithConnectingNode :: EdgeMap -> (EdgeMap, NodeSet)
 createDMapWithConnectingNode inMap = (newDMap, Set.singleton newNodeName) where
