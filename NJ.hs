@@ -98,18 +98,15 @@ createDMapWithConnectingNode inMap = (newDMap, Set.singleton newNodeName) where
     edgesFromOldToNew  = Map.fromList $ map (\x -> ((newNodeName, x), oldToNewNodeDistance x)) notAorB
     edgesFromNewToAorB = newEdgeA `Map.union` newEdgeB
 
-    newEdgeA = Map.singleton (newNodeName, nA) edgeADistance
-    newEdgeB = Map.singleton (newNodeName, nB) edgeBDistance
+    newEdgeA      = Map.singleton (newNodeName, nA) edgeADistance
+    newEdgeB      = Map.singleton (newNodeName, nB) edgeBDistance
+    edgeADistance = (d nA nB / 2) + ((1 / (2 * numberOfNames)) * (sumFilteredKeys nA - sumFilteredKeys nB))
+    edgeBDistance = d nA nB - edgeADistance
 
-    edgeADistance        = (d nA nB / 2) + ((1 / (2 * numberOfNames)) * (sumFilteredKeys nA - sumFilteredKeys nB))
-    edgeBDistance        = d nA nB - edgeADistance
-    sumFilteredKeys name = sum $ Map.elems $ Map.filterWithKey (\(a, b) _ -> a == name || b == name) inMap
-    numberOfNames        = fromIntegral $ Set.size $ mapNamesToSet inMap
-    d                    = lookupDistance inMap
-
-    -- TODO: For some reason this only returns 0 when createDMapWithConnectingNode is fed an EdgeMap.
-    oldToNewNodeDistance x = (d' nA x + d' nB x - d' nA nB) / 2 where
-        d' = lookupDistance dMapWithoutAorB
+    numberOfNames          = fromIntegral $ Set.size $ mapNamesToSet inMap
+    oldToNewNodeDistance x = (d nA x + d nB x - d nA nB) / 2
+    sumFilteredKeys name   = sum $ Map.elems $ Map.filterWithKey (\(a, b) _ -> a == name || b == name) inMap
+    d                      = lookupDistance inMap
 
 -- This is a somewhat ugly way of finding the value, regardless of what
 -- order the (String, String) has. There should only be one correct order.
