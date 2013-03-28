@@ -53,22 +53,21 @@ removeNonPairs :: EdgeMap -> EdgeMap
 removeNonPairs = Map.filterWithKey (\(x, y) _ -> x /= y)
 -- }}}
 -- Neighbor Joining algorithm {{{
-neighbor :: [[DistanceTriplet]] -> (NodeSet, EdgeMap)
-neighbor inMatrix = neighborLoop startingNodes firstDMap startingNodes noEdges where
+neighbor :: [[DistanceTriplet]] -> EdgeMap
+neighbor inMatrix = neighborLoop startingNodes firstDMap noEdges where
     firstDMap     = removeNonPairs $ matrixToMap inMatrix
     startingNodes = mapNamesToSet firstDMap
     noEdges       = Map.empty :: EdgeMap
 
-    neighborLoop unusedNodes distanceMap treeNodes treeEdges
-        | Set.size unusedNodes > 2 = neighborLoop newUnusedNodes newDMap oldAndNewNodes newTreeEdges
-        | otherwise                = (treeNodes, treeEdges `Map.union` distanceMap)
+    neighborLoop unusedNodes distanceMap treeEdges
+        | Set.size unusedNodes > 2 = neighborLoop newUnusedNodes newDMap newTreeEdges
+        | otherwise                = treeEdges `Map.union` distanceMap
         where
             (connectedDMap, newNode, connectedNodes) = createDMapWithConnectingNode distanceMap
 
             newDMap         = connectedDMap `Map.difference` connectingEdges
             connectingEdges = Map.filterWithKey edgeWithConnectedNode connectedDMap
             newUnusedNodes  = (unusedNodes `Set.difference` connectedNodes) `Set.union` newNode
-            oldAndNewNodes  = treeNodes `Set.union` newNode
             newTreeEdges    = treeEdges `Map.union` connectingEdges
 
             edgeWithConnectedNode (x, y) _ = any (`elem` Set.toList connectedNodes) [x, y]
