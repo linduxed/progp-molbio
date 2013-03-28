@@ -3,7 +3,7 @@ module Tests where
 import MolSeq
 import Profile
 import Distance
-import NJ
+import EvolTree
 import Test.HUnit
 
 type RawSeq = (String, String)
@@ -125,4 +125,12 @@ fam5 = [("5A1_Human" , "DQTFISIVDWARRCMVFKELEVADQMTLLQNCWSELLVFDHIYRQVQHLLVTGQEV
         ("5A4_Zfish" , "DQTLFSIVEWARSCIFFKELKVGDQMKLLHNCWSELLVLDYVARQLHHLLITGQEVELGMIQRGQELVQELQLDRRETACLKYLILFNKLLENQPVESVEQVEYTLCAYPQDS"),
         ("5A5_Zfish" , "DQTLFGLVEWARNCELFKELKVDDQMVLLQSCWSELLVLDHLCRQVAYCLITGQQIEASLVSRAQDLVTSLQLDREEFVCLKYLVLFNKSVQNRRVEQTERVDHTMQTHPQEG"),
         ("5B1_Fly"   , "DHRLYKIVKWCKSLPLFKNISIDDQICLLINSWCELLLFSCCFRSIDTKMSQGRKITLTCIERMLNLTDRLRVDRYEYVAMKVIVLLQTELQEAVVRECEKAAYTLAHYPLEG")]
+-- }}}
+-- {{{ Distance matrices
+-- This is the sample matrix found on the Wikipedia Neighbor Joining page.
+wikiMatrix :: [[DistanceTriplet]]
+wikiMatrix = [[("A","A", 0),("A","B",7),("A","C",11),("A","D",14)]
+             ,[("B","A", 7),("B","B",0),("B","C", 6),("B","D", 9)]
+             ,[("C","A",11),("C","B",6),("C","C", 0),("C","D", 7)]
+             ,[("D","A",14),("D","B",9),("D","C", 7),("D","D", 0)]]
 -- }}}
