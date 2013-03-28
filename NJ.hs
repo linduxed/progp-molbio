@@ -1,6 +1,5 @@
 -- Imports and types{{{
-module NJ where
--- TODO: when module is finished, only "neighbor" should be exported
+module NJ (neighbor) where
 
 import Distance
 import Data.List (transpose, minimumBy, (\\))
