@@ -61,8 +61,8 @@ neighbor inMatrix = neighborLoop startingNodes firstDMap startingNodes noEdges w
     noEdges       = Map.empty :: EdgeMap
 
     neighborLoop unusedNodes distanceMap treeNodes treeEdges
-        | Set.size unusedNodes > 3 = neighborLoop newUnusedNodes newDMap oldAndNewNodes newTreeEdges
-        | otherwise                = (treeNodes, connectRemainingThreeNodes distanceMap treeEdges)
+        | Set.size unusedNodes > 2 = neighborLoop newUnusedNodes newDMap oldAndNewNodes newTreeEdges
+        | otherwise                = (treeNodes, treeEdges `Map.union` distanceMap)
         where
             (connectedDMap, newNode, connectedNodes) = createDMapWithConnectingNode distanceMap
 
@@ -116,7 +116,4 @@ createDMapWithConnectingNode inMap = (newDMap, Set.singleton newNodeName, Set.fr
 lookupDistance :: EdgeMap -> String -> String -> Double
 lookupDistance dMap a b = fromMaybe reversePair $ Map.lookup (a, b) dMap where
     reversePair = fromMaybe 0 $ Map.lookup (b, a) dMap
-
-connectRemainingThreeNodes :: EdgeMap -> EdgeMap -> EdgeMap
-connectRemainingThreeNodes = undefined
 -- }}}
