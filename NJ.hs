@@ -90,7 +90,7 @@ findLowestValueKey inMap = fst $ minimumBy (comparing snd) $ Map.toList inMap
 createDMapWithConnectingNode :: EdgeMap -> (EdgeMap, NodeSet, NodeSet)
 createDMapWithConnectingNode inMap = (newDMap, Set.singleton newNodeName, Set.fromList [nA, nB]) where
     (nA, nB)    = findLowestValueKey $ calculateQMap inMap
-    newNodeName = "(" ++ nA ++ " - " ++ nB ++ ")" -- Might get pretty long.
+    newNodeName = "(" ++ nA ++ " ; " ++ nB ++ ")" -- Might get pretty long.
 
     newDMap            = dMapWithoutAorB `Map.union` edgesFromOldToNew `Map.union` edgesFromNewToAorB
     dMapWithoutAorB    = inMap `Map.difference` edgesToAorB
