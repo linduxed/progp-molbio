@@ -18,13 +18,14 @@ newick inMatrix = outString where
 
     treeLoop [] _ = []
     treeLoop (x:xs) nextToParen
-        | bothNodesAreBranches = "(" ++ treeLoop notBranchNodes True ++ ")" ++ treeLoop branchNodes False
-        | nextToParen          = snd x ++ treeLoop xs False
-        | otherwise            = ", " ++ snd x ++ treeLoop xs False
+        | nextToParen && bothAreBranches = "("   ++ treeLoop linkedBranch True ++ ")" ++ treeLoop branchNodes False
+        | bothAreBranches                = ", (" ++ treeLoop linkedBranch True ++ ")" ++ treeLoop branchNodes False
+        | nextToParen                    =         snd x ++ treeLoop xs False
+        | otherwise                      = ", " ++ snd x ++ treeLoop xs False
         where
-            isBranch             = elem ';' -- The neighbor function uses the ';' as a separator in branch names.
-            bothNodesAreBranches = isBranch (fst x) && isBranch (snd x)
-            branchNodes          = filter onCurrentBranch xs
-            notBranchNodes       = filter (not . onCurrentBranch) xs
-            onCurrentBranch y    = fst y == fst x
+            isBranch          = elem ';' -- The neighbor function uses the ';' as a separator in branch names.
+            bothAreBranches   = isBranch (fst x) && isBranch (snd x)
+            linkedBranch      = filter (\y -> fst y == snd x) edgeList
+            branchNodes       = filter onCurrentBranch xs
+            onCurrentBranch z = fst z == fst x
 -- }}}
