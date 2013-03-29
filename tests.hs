@@ -59,6 +59,22 @@ testDistancesBetweenFOXP4proteins = TestList
     , "Distance between mouse and frog."  ~: 0.259 ~=? roundToDecimals 3 (third $ seqListPositionDistance foxp4 4 5)
     ]
 -- }}}
+
+testNewickOutput :: Test
+testNewickOutput = TestList
+    [ "fam1 in Newick-format."  ~: fam1string  ~=? newick (makeDistanceMatrix $ convertSeqs fam1)
+    , "fam2 in Newick-format."  ~: fam2string  ~=? newick (makeDistanceMatrix $ convertSeqs fam2)
+    , "fam3 in Newick-format."  ~: fam3string  ~=? newick (makeDistanceMatrix $ convertSeqs fam3)
+    , "fam4 in Newick-format."  ~: fam4string  ~=? newick (makeDistanceMatrix $ convertSeqs fam4)
+    , "fam5 in Newick-format."  ~: fam5string  ~=? newick (makeDistanceMatrix $ convertSeqs fam5)
+    , "foxp4 in Newick-format." ~: foxp4string ~=? newick (makeDistanceMatrix $ convertSeqs foxp4)
+    ] where
+    fam1string  = "((((PPRA_Human, PPRA_Mouse), (PPRG_Human, PPRG_Mouse)), PPRB_Zfish), PPRB_Human, PPRB_Mouse);"
+    fam2string  = "(((HNFG_Human, HNFG_Mouse), HNF_Fly), (HNFA_Human, HNFA_Mouse), HNFA_Zfish);"
+    fam3string  = "(((((ERB_Human, ERB_Mouse), ERB_Chicken), ERB_Zfish), ERR_Fly), ((ERA_Human, ERA_Mouse), ERA_Chicken), ERA_Zfish);"
+    fam4string  = "(((4A1_Human, 4A1_Mouse), (4A3_Human, 4A3_Mouse)), 4A2_Human, 4A4_Fly);"
+    fam5string  = "((((5A2_Human, 5A2_Mouse), 5A2_Zfish), 5A4_Zfish), (((5A3_Worm, 5B1_Fly), 5A3_Fly), 5A5_Zfish), 5A1_Human);"
+    foxp4string = "((((FOXP4_MOUSE, FOXP4_RAT), FOXP4_FROG), FOXP4_HUMAN), FOXP4_COW, FOXP4_DOG);"
 -- Sequence lists {{{
 -- Simple DNA list.
 shortDNAs :: [RawSeq]
