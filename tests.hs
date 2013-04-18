@@ -58,7 +58,6 @@ testDistancesBetweenFOXP4proteins = TestList
     , "Distance between rat and frog."    ~: 0.256 ~=? roundToDecimals 3 (third $ seqListPositionDistance foxp4 3 5)
     , "Distance between mouse and frog."  ~: 0.259 ~=? roundToDecimals 3 (third $ seqListPositionDistance foxp4 4 5)
     ]
--- }}}
 
 testNewickOutput :: Test
 testNewickOutput = TestList
@@ -75,6 +74,7 @@ testNewickOutput = TestList
     fam4string  = "(((4A1_Human, 4A1_Mouse), (4A3_Human, 4A3_Mouse)), 4A2_Human, 4A4_Fly);"
     fam5string  = "((((5A2_Human, 5A2_Mouse), 5A2_Zfish), 5A4_Zfish), (((5A3_Worm, 5B1_Fly), 5A3_Fly), 5A5_Zfish), 5A1_Human);"
     foxp4string = "((((FOXP4_MOUSE, FOXP4_RAT), FOXP4_FROG), FOXP4_HUMAN), FOXP4_COW, FOXP4_DOG);"
+-- }}}
 -- Sequence lists {{{
 -- Simple DNA list.
 shortDNAs :: [RawSeq]
